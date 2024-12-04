@@ -1,0 +1,13 @@
+name: App_airbnb
+title: App_airbnb
+username: loiccheong
+account: loiccheong
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13440613
+bundleId: 9411005
+url: https://loiccheong.shinyapps.io/App_airbnb/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData
