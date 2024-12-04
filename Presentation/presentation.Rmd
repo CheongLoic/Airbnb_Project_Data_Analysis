@@ -1,0 +1,154 @@
+---
+title: "Airbnb Project"
+author: "Charlene BRUNO, Loic CHEONG, Pierre PHILBERT, SORY Anas"
+subtitle: ING5 BDA2
+output:
+  slidy_presentation: default
+  ioslides_presentation: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Introduction & Project objective 
+
+  <img src=".\img\intro.PNG"  
+  style = "display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%; " />
+  
+<h3> A project to get through Airbnb's dataset and visualize it. </h3>
+  
+We present here our exploratory data analysis, visualizations, interactive plots of the Airbnb's data.
+
+The aim of the project is to show come aggregations of different data types relatively to :  
+- Room Type  
+- Number of bedrooms  
+- Neighborhood  
+- Dates  
+- City  
+ 
+## Data and Preprocess Explanation
+
+First of all, we had to load a .csv file which contains a list of URLS under the following form : 
+```R
+http://data.insideairbnb.com/country/region/city/date/data/listings.csv.gz
+```
+
+-STEP1 : Decompose URL
+
+```R
+#We split the url to add columns to filter later
+url_decomposed <- str_split(urls_data$listings_data_url,"/",
+                            simplify = TRUE)
+  
+urls_data$country <- url_decomposed[,4]
+urls_data$city <- url_decomposed[,6]
+urls_data$date <- url_decomposed[,7]
+  
+```
+##
+
+-STEP2 : Filtered URL in function of countries, date
+
+```R
+  #We filter the urls on countries and dates
+  #filter countries: Spain, France and Belgium
+  urls_data <-urls_data %>%
+    filter(country %in% c("france","spain","germany")) %>%
+    arrange(country)
+  #filter dates: 3 first available dates 
+  urls_data <-slice_head(urls_data%>%group_by(city), n = 3)
+```
+-STEP3 : Clean and store data
+```R
+  tmp <- tempfile()
+  download.file(url,tmp)
+  listings <- read.csv(gzfile(tmp))
+  
+  listings$country <- country
+  listings$city <- city
+  listings$date <- date
+```
+##
+```R
+  columns_listings <- c("country","city", "date", "id", "neighbourhood_cleansed", 
+                         "latitude", "longitude", 
+                        "property_type", "room_type", "accommodates", "bedrooms", 
+                        "beds", "price", "minimum_nights",  "maximum_nights","availability_30")
+   
+   listings <- listings %>% 
+     select(which(names(.) %in% columns_listings)) %>% 
+      arrange(id)
+
+   listings$price <- as.numeric(str_remove(listings$price,"[$]"))
+   listings$price[is.na(listings$price)]<-0
+   listings$availability_30 <- as.numeric(listings$availability_30)
+   listings$availability_30[is.na(listings$availability_30)]<-30
+   listings$revenue_30 <- listings$price *(30-listings$availability_30)
+  
+  dir.create(file.path("data_cleansed",country, city, date), recursive = TRUE)
+  write.csv(listings, file.path("data_cleansed", country,city, date, "listings.csv"))
+  print(paste0("saving data into ", file.path("data_cleansed", country,city,date, "listings.csv")))
+```
+##
+
+-STEP4 : Read data in dataframe 
+```R
+   countries <- c("france","germany","spain")
+   files_paths <- c()
+   for(country in countries){
+    file_dir <- file.path(".", "data_cleansed", country)
+    file_subdirs_cities <- list.dirs(file_dir,recursive=FALSE)
+    
+    for(file_subdir_city in file_subdirs_cities){
+      file_subdirs_dates <- list.dirs(file_subdir_city,recursive=FALSE)
+      files_paths <- c(files_paths, file_subdirs_dates)
+    }
+  }
+  files_paths <- file.path(files_paths, "listings.csv")
+  listings <- do.call(rbind,lapply(files_paths, read.csv, row.names=1))
+```
+## Documentation 
+
+ <img src=".\img\documentation.PNG" style = "display: block;
+  placement : center;
+  height :100%;
+  width: 90%" />
+
+## Tab 1 Comparing cities 
+
+ <img src=".\img\tab1.PNG" style = "display: block;
+  placement : center;
+  height :70%;
+  width: 90%" />
+- City - Aggregation type - Features - Dimension - Date  
+ 
+
+## Tab 2 Deep dive into City
+
+<img src=".\img\tab2.PNG" style = "display: block;
+  placement : center;
+  height :70%;
+  width: 90%" />
+- City - Date - Dimension  
+
+## Conclusion
+ 
+Advantages :  
+- A magnificient user interface  
+- Intuitive Interactions to get relevant data  
+
+Drawbacks :  
+- Data had been a bit slow to be shown   
+- Our implementation could be optimized 
+
+App shared on shinyApp.io:
+<img src=".\img\shinyapp.PNG" style = "display: block;
+  margin-left: auto;
+  margin-right: auto;
+  height :70%;
+  width: 60%" />
+
