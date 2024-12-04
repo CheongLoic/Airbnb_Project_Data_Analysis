@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# Airbnb_dataviz
-=======
 # Airbnb_Project_Data_Analysis
 It is a project to use R Shiny to analyze Airbnb data 
 
@@ -20,4 +17,3 @@ It is a project to use R Shiny to analyze Airbnb data
 
 # App
 UI & Server
->>>>>>> master
