@@ -5,7 +5,7 @@ account: loiccheong
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 13440190
-bundleId: 9410700
+bundleId: 9459942
 url: https://loiccheong.shinyapps.io/App_Airbnb_data_analysis/
 version: 1
 asMultiple: FALSE
