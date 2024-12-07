@@ -21,15 +21,15 @@ It is a project to use R Shiny to analyze Airbnb data
 # App
 
 <p align="center">
-  <img src="Presentation/img/documentation.png)">
+  <img src="Presentation/img/documentation.png">
 </p>
 
 <p align="center">
-  <img src="Presentation/img/tab1.png)">
+  <img src="Presentation/img/tab1.png">
 </p>
 
 <p align="center">
-  <img src="Presentation/img/tab2.png)">
+  <img src="Presentation/img/tab2.png">
 </p>
 
 
